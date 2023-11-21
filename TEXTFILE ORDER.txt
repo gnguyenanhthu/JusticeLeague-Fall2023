@@ -1,0 +1,27 @@
+---TEXTFILE ORDER---
+
+1/ Map.txt
+RoomID~RoomName~
+RoomDescription~
+North~East~South~West
+
+2/ Item.txt
+InitRoomID
+ItemID
+ItemName
+ItemType
+ItemDescription
+
+3/ Puzzle.txt
+InitRoomID
+PuzzleID
+PuzzleName
+NumberOfAttempts
+Question
+Answer
+SolvedMessage
+Hint
+PuzzleDmg
+
+4/ Monster.txt
+InitRoomID~MonsterID~MonsterName~MonsterHP~MonsterDmg

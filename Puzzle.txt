@@ -1,0 +1,90 @@
+2
+1
+The Locker
+3
+This puzzle will be a locker with a combination on it, there is a note next to the locker that says "The locker combination was changed all Facility Guards need to read the name of the SCP’s documents on this level the combination is one of their designations"
+173
+You have opened the locker and there are some items inside! There was also a note that says there's secret contraband in LC-CD-02!
+Maybe I should look at the note left next to the locker.
+0
+
+3
+2
+Your First Weapon
+3
+Hidden contraband behind a loose brick when the player inspects the brick a prompt is displayed "This brick will come loose with a small amount of force"
+use brick
+You pull on the brick and it comes free from the wall, there was something behind the brick a Level 0 KeyCard and a Document about SCP-173!
+I could "use Brick" to pull the brick out of the wall.
+0
+
+4
+3
+Stare At The Void
+3
+You encountered SCP-173 in a very lit room, underneath SCP-173 is a murky puddle. You feel strangled.
+stare run
+Now I am in the next room.
+I can stare then run and I will be in the next room over.
+0
+
+9
+6
+Smashing
+3
+You need to smash the wall to get to the air vent(HC-04).
+use brick
+I used the brick to bash the gate on the air vent now I can go through!
+This vent looks weak I could easily bash it open!
+0
+
+10
+7
+Amazing
+3
+You travel through the air vent and found a note in the maze "N, E, E, N,?"
+N E E N N
+I got through the maze!
+What is the opposite of S?
+0
+
+11
+8
+Amazing 2
+3
+Player must use reverse order of note "S,S,W,W,S" if they wish to go back the way they came from.
+S W W S S
+I got through the maze!
+What is the opposite of puzzle 7 (S W W S S)?
+0
+
+15
+9
+Nikola Tesla
+3
+Room contains a tesla gate that let you go through but SCP-079 is watching and waiting for you to go through the tesla gate and kill the you. If the player you wait for the camera to look away, then you can safely go through the gate.
+Wait
+I made it through!
+Maybe I should be more patient!
+1000
+
+13
+10
+Got that dog in him
+3
+Oddly lit room with a dog-like creature blindly strolling around.
+Sneak throw brick run
+You distracted SCP-939! You are now in the next room!
+This SCP wont be killed by anything I have right now I better distract it and make a run for it! (Sneak throw brick run)
+1000
+
+23
+12
+MATH!
+3
+You look at your documents of the last 3 SCP you encountered and then you take their SCP numbers and add them up this will be the code to access Room 5 on the fourth floor.
+281
+The Nuclear Device is now inactive.
+The code is the sum of the last 2 SCP you have encountered.
+0
+---END---

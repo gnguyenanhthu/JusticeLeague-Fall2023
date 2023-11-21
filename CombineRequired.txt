@@ -1,0 +1,32 @@
+0
+A16
+Level 1 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to personnel working in proximity to but with no direct, indirect, or informational access to anomalous objects or entities in containment. Level 1 security clearances are typically granted to personnel working in clerical, logistics, or janitorial positions at facilities with containment capability or otherwise must handle sensitive information.
+
+0
+A17
+Level 2 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to security and research personnel that require direct access to information regarding anomalous objects and entities in containment. Most research staff, field agents, and containment specialists hold a Level 2 security clearance.
+
+0
+A18
+Level 3 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to senior security and research personnel that require in-depth data regarding the source, recovery circumstances, and long-term planning for anomalous objects and entities in containment. Most senior research staff, project managers, security officers, response team members, and Mobile Task Force operatives hold a Level 3 security clearance.
+
+8
+A12
+SCP-714
+Required
+A green jade ring that can be expanded and contracted to perfectly fit the finger of anyone who touches it. Once worn, the ring grants its wearer immunities against a multitude of hazards. The ring can be removed and the effects are not permanent.
+0
+
+20
+A23
+Nuke Deactivation
+Required
+Equip this to be able to enter room SZ-02.
+0
+---END---

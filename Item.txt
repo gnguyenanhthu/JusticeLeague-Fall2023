@@ -1,0 +1,154 @@
+2
+A03
+SCP-049-2's File
+Readable Document
+SCP-049-2 is a disfigured humanoid anomaly created by SCP-049 that will attack any living object.
+
+3
+A04
+SCP-173's File
+Readable Document
+SCP-173, also known as "The Sculpture", is a Euclid-class object under the Foundation's containment. The object is a sculpture constructed out of concrete. It is capable of moving at high speeds and will kill by either snapping at the base of the skull or strangulation. SCP-173 however, is incapable of moving when in direct line of sight of a person.
+
+2
+A05
+SCP-914's File
+Readable Document
+SCP-914 is a Safe-class object under the Foundation's containment. It is a large machine consisting of gears, pulleys, and other mechanical parts. It has a large front panel and two booths, labeled 'Intake' and 'Output'. When an object is placed into the 'Intake' booth, and the key is turned, the object goes inside the machine to appear in the 'Output' booth.
+
+7
+A06
+SCP-049's File
+Readable Document
+SCP-049, also referred to as the Plague Doctor, is a Euclid-class object under the Foundation's containment. He is a humanoid figure that resembles a 15-16th century European Plague Doctor, with a black robe and a white-beaked mask. SCP-049's touch is extremely lethal to humans, killing those who come into contact with it within minutes.
+
+11
+A07
+SCP-939's File
+Readable Document
+SCP-939, also known as "With Many Voices", is a Keter-class object under the Foundation's containment. SCP-939 are pack-based predators. Their primary method of luring prey is the imitation of human speech in the voices of prior victims, often in a fashion that implies significant distress. SCP-939 can only "see" those that make noise.
+
+14
+A08
+SCP-079's File
+Readable Document
+SCP-079, referred to as the "Old AI", is a Euclid-class object under the Foundation's containment. It is an Exidy Sorcerer microcomputer built in 1978 when its creator took it upon himself to attempt to code an AI. According to his notes, his plan was for the code to continuously evolve and improve itself as time went on. SCP-079 can take control of the cameras to "move" through the facility, depending on the camera it is on, SCP-079 can close and lock the doors in the camera's view.
+
+14
+A09
+SCP-096's File
+Readable Document
+SCP-096, also known as the Shy Guy, is a Euclid-class humanoid contained by the Foundation, who will know if someone looked at its face and relentlessly pursue that individual until violently murdering them while screaming.
+
+14
+A10
+SCP-106's File
+Readable Document
+SCP-106, also known as Corporal Lawrence and The Old Man, is a Keter-class humanoid SCP object contained by the SCP Foundation. SCP-106 is an elderly humanoid, with a general appearance of advanced decomposition. SCP-106 causes a "corrosion" effect in all solid matter it touches, engaging a physical breakdown in materials several seconds after contact.
+
+19
+A11
+SCP-4051's File
+Readable Document
+SCP-4051 is a teenage boy named Rainer Miller who can create portals and pull small objects out of them. SCP-4051 used to be in a regular humanoid containment unit and visiting a therapist, but is now housed in a cell surrounded by a set of very complex pistons and has therapy sessions over the two-way PA system in his cell. This is probably because of whatever happened that changed his class from Euclid to Keter.
+
+1
+A15
+Level 0 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to non-essential personnel with no need to access information regarding anomalous objects or entities in Foundation containment. Level 0 access is typically held by personnel in non-secured clerical, logistics, or janitorial positions at facilities with no access to operational data.
+
+3
+A15
+Level 0 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to non-essential personnel with no need to access information regarding anomalous objects or entities in Foundation containment. Level 0 access is typically held by personnel in non-secured clerical, logistics, or janitorial positions at facilities with no access to operational data.
+
+7
+A16
+Level 1 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to personnel working in proximity to but with no direct, indirect, or informational access to anomalous objects or entities in containment. Level 1 security clearances are typically granted to personnel working in clerical, logistics, or janitorial positions at facilities with containment capability or otherwise must handle sensitive information.
+
+11
+A17
+Level 2 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to security and research personnel that require direct access to information regarding anomalous objects and entities in containment. Most research staff, field agents, and containment specialists hold a Level 2 security clearance.
+
+14
+A19
+Level 4 Clearance Card
+Key Item
+An SCP Foundation security clearance card assigned to senior administration that requires access to site-wide and/or regional intelligence as well as long-term strategic data regarding Foundation operations and research projects. Level 4 security clearances are typically only held by Site Directors, Security Directors, or Mobile Task Force Commanders.
+
+11
+A21
+Medical Kit
+Consumable
+A basic item that allows the user to heal 80 health points.
+80
+
+17
+A21
+Medical Kit
+Consumable
+A basic item that allows the user to heal 80 health points.
+80
+
+17
+A21
+Medical Kit
+Consumable
+A basic item that allows the user to heal 80 health points.
+80
+
+17
+A22
+Adrenaline Shot
+Consumable
+A basic item that allows the user to heal 30 health points.
+30
+
+3
+A01
+Brick
+Weapon
+A brick pulled from a cell wall. Does 20 damage per hit.
+20
+
+14
+A14
+COM-15 Sidearm
+Weapon
+A pistol that randomly spawns in any room on floor one. Does 25 damage points per shot.
+25
+
+19
+A13
+Micro H.I.D.
+Weapon
+A special weapon that serves as a high-intensity electrical discharge type weapon that can deal massive amounts of damage. Does 145 damage per shot.
+145
+
+2
+A02
+Combat Armor
+Equippable
+Increases HP by 50 points.
+50
+
+7
+A12
+SCP-714
+Equippable
+A green jade ring that can be expanded and contracted to perfectly fit the finger of anyone who touches it. Once worn, the ring grants its wearer immunities against a multitude of hazards. The ring can be removed and the effects are not permanent.
+0
+
+23
+A23
+Nuke Deactivation
+Equippable
+Equip this to be able to enter room SZ-02.
+0
+---END---

@@ -25,10 +25,11 @@ public class Game extends Application{
         // Create the root pane and add the view
         Pane pane = new Pane();
         pane.getChildren().add(gameControl.getGameView());
+
         pane.setBackground(Background.fill(Color.BLACK));
 
         // Create the scene and set it on the stage
-        Scene scene = new Scene(pane, 800, 600);
+        Scene scene = new Scene(pane, 900, 700);
         stage.setTitle("SCP Danger");
         stage.setScene(scene);
         stage.show();
