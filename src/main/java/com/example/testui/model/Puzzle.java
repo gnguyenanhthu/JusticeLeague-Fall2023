@@ -47,6 +47,8 @@ public class Puzzle implements Serializable {
 	
 	public int getPuzzleDmg() { return puzzleDmg; }
 
+	public void setAttempts(int attempts) { this.attempts = attempts; }
+
 	@Override
 	public String toString() {
 		return "Puzzle [initRoomID=" + initRoomID + ", puzzleID=" + puzzleID + ", puzzleName=" + puzzleName

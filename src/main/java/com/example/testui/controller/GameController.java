@@ -20,7 +20,7 @@ public class GameController {
         File file = new File("tiptaptwo.wav");
         this.gameModel = gameModel;
         this.gameView = gameView;
-        //music(file);
+//        music(file);
         setupEventHandlers();
     }
 
@@ -35,27 +35,36 @@ public class GameController {
                     System.exit(0);
                 }
                 else if (command.equalsIgnoreCase("north") || command.equalsIgnoreCase("n")) {
-                    gameView.updateView(gameModel.getPlayer().moveNorth());
+                    gameView.updateView(gameModel.getPlayer().enterRoom(gameModel.getPlayer().moveNorth()));
                 }
                 else if (command.equalsIgnoreCase("east") || command.equalsIgnoreCase("e")) {
-                    gameView.updateView(gameModel.getPlayer().moveEast());
+                    gameView.updateView(gameModel.getPlayer().enterRoom(gameModel.getPlayer().moveEast()));
                 }
                 else if (command.equalsIgnoreCase("south") || command.equalsIgnoreCase("s")) {
-                    gameView.updateView(gameModel.getPlayer().moveSouth());
+                    gameView.updateView(gameModel.getPlayer().enterRoom(gameModel.getPlayer().moveSouth()));
                 }
                 else if (command.equalsIgnoreCase("west") || command.equalsIgnoreCase("w")) {
-                    gameView.updateView(gameModel.getPlayer().moveWest());
+                    gameView.updateView(gameModel.getPlayer().enterRoom(gameModel.getPlayer().moveWest()));
                 }
-                else if (command.equalsIgnoreCase("location")) {
+                else if (command.equalsIgnoreCase("location") || command.equalsIgnoreCase("l") || command.equalsIgnoreCase("")) {
                     gameView.updateView(gameModel.getPlayer().displayLocation());
                 }
                 else if (command.equalsIgnoreCase("info")) {
                     gameView.updateView(gameModel.getPlayer().showInfo());
                 }
+                else if (command.equalsIgnoreCase("stats")) {
+                    gameView.updateView(gameModel.getPlayer().showEquipped());
+                }
                 else if (command.equalsIgnoreCase("explore")) {
                     gameView.updateView(gameModel.getPlayer().explore());
                 }
-                else if (command.equalsIgnoreCase("inventory")) {
+                else if (command.equalsIgnoreCase("solve")) {
+                    gameModel.getPlayer().playPuzzle(gameView);
+                }
+                else if (command.equalsIgnoreCase("combine")) {
+                    gameView.updateView(gameModel.getPlayer().combineItem());
+                }
+                else if (command.equalsIgnoreCase("inventory") || command.equalsIgnoreCase("i")) {
                     gameView.updateView(gameModel.getPlayer().showInventory());
                 }
                 else if (command.contains("pickup")) {
@@ -73,6 +82,44 @@ public class GameController {
                     }
                     else
                         gameView.updateView("You did not specify what to drop.");
+                }
+                else if (command.contains("inspect")) {
+                    if(command.length() > 8) {
+                        String itemId = command.substring(8, command.length());
+                        gameView.updateView(gameModel.getPlayer().inspectItem(itemId));
+                    }
+                    else
+                        gameView.updateView("You did not specify what to inspect.");
+                }
+                else if (command.contains("equip") && !command.contains("unequip")) {
+                    if(command.length() > 6) {
+                        String itemId = command.substring(6, command.length());
+                        gameView.updateView(gameModel.getPlayer().equipItem(itemId));
+                    }
+                    else
+                        gameView.updateView("You did not specify what to equip.");
+                }
+                else if (command.contains("unequip")){
+
+                    if(command.length() > 8) {
+                        String itemId = command.substring(8, command.length());
+                        gameView.updateView(gameModel.getPlayer().unequipItem(itemId));
+                    }
+                    else
+                    {
+                        gameView.updateView("You did not specify what to unequip.");
+                    }
+                }
+                else if (command.contains("use")){
+
+                    if(command.length() > 4) {
+                        String itemId = command.substring(4, command.length());
+                        gameView.updateView(gameModel.getPlayer().useItem(itemId));
+                    }
+                    else
+                    {
+                        gameView.updateView("You did not specify what to use.");
+                    }
                 }
                 else {
                     gameView.updateView("Please input right command.");

@@ -1,4 +1,7 @@
 package com.example.testui.model;
+import com.example.testui.view.*;
+import javafx.scene.input.KeyCode;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -90,39 +93,39 @@ public class Player implements Serializable{
 		}
 	}
 
-	public String moveNorth(){
+	public boolean moveNorth(){
 		if (currentRoom.getNorthRoom() == 0)
-			return "You cannot go this way.\nPlease choose another direction!";
+			return false;
 		else {
 			setCurrentRoom(gameMap.getRoom(currentRoom.getNorthRoom()));
-			return displayLocation() + checkVisited();
+			return true;
 		}
 	}
 
-	public String moveEast(){
+	public boolean moveEast(){
 		if (currentRoom.getEastRoom() == 0)
-			return "You cannot go this way.\nPlease choose another direction!";
+			return false;
 		else {
 			setCurrentRoom(gameMap.getRoom(currentRoom.getEastRoom()));
-			return displayLocation() + checkVisited();
+			return true;
 		}
 	}
 
-	public String moveSouth(){
+	public boolean moveSouth(){
 		if (currentRoom.getSouthRoom() == 0)
-			return "You cannot go this way.\nPlease choose another direction!";
+			return false;
 		else {
 			setCurrentRoom(gameMap.getRoom(currentRoom.getSouthRoom()));
-			return displayLocation() + checkVisited();
+			return true;
 		}
 	}
 
-	public String moveWest(){
+	public boolean moveWest(){
 		if (currentRoom.getWestRoom() == 0)
-			return "You cannot go this way.\nPlease choose another direction!";
+			return false;
 		else {
 			setCurrentRoom(gameMap.getRoom(currentRoom.getWestRoom()));
-			return displayLocation() + checkVisited();
+			return true;
 		}
 	}
     
@@ -146,7 +149,9 @@ public class Player implements Serializable{
     
     // Action happens after player enter a room
     // Thu
-    public void enterRoom(){
+    public String enterRoom(boolean roomFound){
+		if (!roomFound)
+			return "You cannot go this way.\nPlease choose another direction!";
     	if (!checkKey()) {
     		Item key = null;
     		for(Item item : gameMap.itemList) {
@@ -162,24 +167,24 @@ public class Player implements Serializable{
             	}
     		}
     		setCurrentRoom(gameMap.getRoom(currentRoom.getRoomID()-1));
-    		System.out.println("\nThe next room is locked, you need to use " + key.getItemName() + " to unlock.\n");
+    		return "\nThe next room is locked, you need to use " + key.getItemName() + " to unlock.\n";
     	}
-    	else if(!checkRequiredItem()) {
-    		Scanner input = new Scanner(System.in);
-			setPlayerHP(0);
-    		System.out.println("You didn't equip the right item, you're dead!");
-    		System.out.println("Press enter to revive at the spawn room or \"exit\" to quit the game.");
-    		String decision = input.nextLine();	
-    		if (decision.equalsIgnoreCase("exit")) {
-    			return;
-    		}
-    		else {
-    			revivePlayer();
-    		}
-    	} else {
+//    	else if(!checkRequiredItem()) {
+//    		Scanner input = new Scanner(System.in);
+//			setPlayerHP(0);
+//    		System.out.println("You didn't equip the right item, you're dead!");
+//    		System.out.println("Press enter to revive at the spawn room or \"exit\" to quit the game.");
+//    		String decision = input.nextLine();
+//    		if (decision.equalsIgnoreCase("exit")) {
+//    			return;
+//    		}
+//    		else {
+//    			revivePlayer();
+//    		}
+//    	}
+    	else {
     		checkSpawnRoom();
-    		displayLocation();
-    		playPuzzle();
+			return displayLocation() + checkVisited();
     	}
     }
     
@@ -380,6 +385,8 @@ public class Player implements Serializable{
     		}
     		message += "\n-------------------------------\n";
     	}
+		if (currentRoom.getPuzzle()!=null)
+			message += "Hey you have a puzzle to solve!\n";
     	if (currentRoom.getMonster() != null) {
     		message += "There's an SCP in this room!\n";
     	}
@@ -394,11 +401,11 @@ public class Player implements Serializable{
     	}
     	else {
     		Collections.sort(inventory);
-			String message = "\n";
+			String message = "Your Inventory\n";
     		for(Item item : inventory) {
-    			message = message + "-------------------------------\n" + item.getItemID() + ": " + item.getItemName();
+    			message = message + "\n" + item.getItemID() + ": " + item.getItemName();
     		}
-    		message += "\n-------------------------------\n";
+    		message += "\n";
 			return message;
     	}
     }
@@ -407,9 +414,9 @@ public class Player implements Serializable{
     // ET
     public String pickUp(String itemID) {
 		if (currentRoom.getRoomItems().isEmpty()) {
-			return "\nThere's nothing here to pick up.\n";
+			return "There's nothing here to pick up.";
 		} else if (currentRoom.getPuzzle() != null) {
-			return "\nYou have to solve the puzzle before picking up items.\n";
+			return "You have to solve the puzzle before picking up items.";
 		} else {
 			for (Item item : currentRoom.getRoomItems()) {
 				if (item.getItemID().equals(itemID)) {
@@ -417,10 +424,10 @@ public class Player implements Serializable{
 					inventory.add(item);
 					if (item instanceof Weapon)
 						weapons.add((Weapon) item);
-					return "\nYou've pickup up " + item.getItemName() + " and placed it in your inventory.\n";
+					return "You've pickup up " + item.getItemName() + " and placed it in your inventory.";
 				}
 			}
-			return "\nThis item does not exist here.\n";
+			return "This item does not exist here.";
 		}
 	}
     
@@ -428,7 +435,7 @@ public class Player implements Serializable{
     // ET
     public String dropItem(String itemID) {
     	if(inventory.isEmpty()) {
-    		return "\nThere's nothing to drop.\n";
+    		return "There's nothing to drop.";
     	}
     	else {
     		Item item = findItem(itemID);
@@ -437,68 +444,75 @@ public class Player implements Serializable{
     				currentRoom.getRoomItems().add(item);
     				if (item instanceof Weapon)
     					weapons.remove((Weapon) item);
-					return "\nYou've dropped " + item.getItemName() + " on the floor.\n";
+					return "You've dropped " + item.getItemName() + " on the floor.";
     		}
     		else {
-    			return "\nYou don't have this item.\n";
+    			return "You don't have this item.";
     		}
     	}
     }
 
     // Display the puzzle in a room
     // Augustine, ET, Thu
-    public void playPuzzle () {
-    	Scanner input = new Scanner(System.in);
-        if (currentRoom.getPuzzle()!= null) {
-            System.out.println("Hey you have a puzzle to solve!");
-            int numAttempts = currentRoom.getPuzzle().getAttempts();
-            while (numAttempts > 0) {
-                System.out.println(currentRoom.getPuzzle().getQuestion());
-                String answer = input.nextLine();
-                if (answer.equalsIgnoreCase("hint")) {
-                	System.out.println("\nHint:");
-                	System.out.println(currentRoom.getPuzzle().getHint() + "\n");
-                	continue;
-                }
-                if (answer.equalsIgnoreCase(currentRoom.getPuzzle().getAnswer())) {
-                    System.out.println(currentRoom.getPuzzle().getSolvedMessage());
-                    currentRoom.setPuzzle(null);
-                    autoPickup();
-                    break;
-                }
-                else {
-                	System.out.println("\nYou answered incorrectly! You have " + numAttempts + " attempt(s) left.\n");
-                    numAttempts--;
-                }
-            }
-            if (numAttempts == 0) {
-                System.out.println("\nYou failed the puzzle.\n");
-                if (currentRoom.getPuzzle().getPuzzleDmg()!=0) {
-                    this.setPlayerHP(this.getPlayerHP() - currentRoom.getPuzzle().getPuzzleDmg());
-                    System.out.println("\nYou took damage.\n");
-                    if (playerHP <= 0)
-                    	revivePlayer();
-                }
-            }
-        }
-    }
+	public void playPuzzle (GameView view) {
+		if (currentRoom.getPuzzle()!= null) {
+			int numAttempts = currentRoom.getPuzzle().getAttempts();
+			view.updateView(currentRoom.getPuzzle().getQuestion());
+			view.enterEvent();
+			view.getAnswerBox().setOnKeyPressed(e -> {
+				if(e.getCode() == KeyCode.ENTER){
+						String answer = view.getAnswerBox().getText();
+						view.getAnswerBox().clear();
+						view.getCommandBox().clear();
+						if (answer.equalsIgnoreCase("hint")) {
+							view.updateView("Hint:" + currentRoom.getPuzzle().getHint());
+						}
+						else if (answer.equalsIgnoreCase(currentRoom.getPuzzle().getAnswer())) {
+							String message = currentRoom.getPuzzle().getSolvedMessage() + "\n" + autoPickup();
+							view.updateView(message);
+							currentRoom.setPuzzle(null);
+							view.exitEvent();
+						}
+						else {
+							currentRoom.getPuzzle().setAttempts(currentRoom.getPuzzle().getAttempts()-1);
+							view.updateView("You answered incorrectly! You have " + currentRoom.getPuzzle().getAttempts() + " attempt(s) left.\n"
+									+ currentRoom.getPuzzle().getQuestion());
+						}
+					}
+					if (currentRoom.getPuzzle()!= null && currentRoom.getPuzzle().getAttempts() == 0) {
+						String message = "You failed the puzzle.\n";
+
+						currentRoom.getPuzzle().setAttempts(numAttempts);
+						if (currentRoom.getPuzzle().getPuzzleDmg()!=0) {
+							this.setPlayerHP(this.getPlayerHP() - currentRoom.getPuzzle().getPuzzleDmg());
+							message += "You took " + currentRoom.getPuzzle().getPuzzleDmg() + " damage.";
+							if (playerHP <= 0)
+								revivePlayer();
+						}
+						view.updateView(message);
+						view.exitEvent();
+					}
+			});
+		} else {
+			view.updateView("There's no puzzle to solve!");
+			return;
+		}
+	}
 
     // Inspect an item to see description
     // Thu
-    public void inspectItem(String itemID) {
+    public String inspectItem(String itemID) {
     	if(inventory.isEmpty()) {
-    		System.out.println("\nThere's nothing to inspect.");
+    		return "There's nothing to inspect.";
     	}
     	else {
     		Item item = findItem(itemID);
     		if(item!=null) {
-    				System.out.println("\n" + item.getItemID() + ": " + item.getItemName());
-    				System.out.println(item.getItemDescription());
+    				return item.getItemID() + ": " + item.getItemName() + "\n" + item.getItemDescription();
     		}
     		else {
-    			System.out.println("\nYou don't have this item.");
+    			return "\nYou don't have this item.";
     		}
-			System.out.println();
     	}
     }
     
@@ -537,10 +551,9 @@ public class Player implements Serializable{
     
     // Combine 2 keys to get the higher level key
     // Thu
-    public void combineItem() {
+    public String combineItem() {
     	if (currentRoom.getRoomID() != 5) {
-    		System.out.println("\nYou can only combine items in Room LC-05.\n");
-    		return;
+    		return "\nYou can only combine items in Room LC-05.\n";
     	}
     	int key0 = 0, key1 = 0, key2 = 0;
     	for (Item item : inventory) {
@@ -556,39 +569,39 @@ public class Player implements Serializable{
     		removeAllKeys("A15");
     		Item combineItem = gameMap.getCombineItem().get(0);
     		inventory.add(combineItem);
-    		System.out.println("\nYou have successfully combined 2 " + item.getItemName() + ".");
-    		System.out.println(combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n");
+    		return "\nYou have successfully combined 2 " + item.getItemName() + ".\n"
+					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n";
     	}
     	else if (key1 == 2) {
     		Item item = findItem("A16");
     		removeAllKeys("A16");
     		Item combineItem = gameMap.getCombineItem().get(1);
     		inventory.add(combineItem);
-    		System.out.println("\nYou have successfully combined 2 " + item.getItemName() + ".");
-    		System.out.println(combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n");
+			return "\nYou have successfully combined 2 " + item.getItemName() + ".\n"
+					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n";
     	}
     	else if (key2 == 2) {
     		Item item = findItem("A17");
     		removeAllKeys("A17");
     		Item combineItem = gameMap.getCombineItem().get(2);
     		inventory.add(combineItem);
-    		System.out.println("\nYou have successfully combined 2 " + item.getItemName() +".");
-    		System.out.println(combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n");
+			return "\nYou have successfully combined 2 " + item.getItemName() + ".\n"
+					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n";
     	}
     	else {
-    		System.out.println("\nYou don't have any items to combine.\n");
+    		return "\nYou don't have any items to combine.\n";
     	}
     }
     
     // Equip an item, moving them from the inventory to the equipment array
     // ET
-    public void equipItem(String itemID) {
+    public String equipItem(String itemID) {
     	// search inventory
     	Item item = findItem(itemID);
     	
     	// if an item is found in the inventory, place it in the equipment array
     	if (inventory.isEmpty()) {
-    		System.out.println("\nYou literally have nothing. Pick something up.\n");
+    		return "You literally have nothing. Pick something up.";
     	} else if(item != null && item instanceof Equippable) {
     		Equippable equip = (Equippable)item;
     		removeFromInventory(itemID);
@@ -596,50 +609,48 @@ public class Player implements Serializable{
     		if(equip.getHpValue() != 0){
     			setPlayerMaxHP(getPlayerMaxHP() + equip.getHpValue());
     		}
-    		System.out.println("\nYou've successfully equipped " + item.getItemName() + ".\n");
+    		return "You've successfully equipped " + item.getItemName();
     	} else if( !(item instanceof Equippable) ) {
-    		System.out.println("\nThis is not an equippable item.\n");
+    		return "This is not an equippable item.";
     	} else {
-    		System.out.println("\nThis item was not found in your inventory.\n");
+    		return "This item was not found in your inventory.";
     	}
     }
     // Use a consumable item
     // Augustine, Thu
-    public void useConsumable (String itemID) {
+    public String useConsumable (String itemID) {
         Item item = findItem(itemID);
         if (item != null && item instanceof Consumable) {
             removeFromInventory(itemID);
-            System.out.println("\nYou've successfully use " + item.getItemName() + ".");
+			String message = "You've successfully use " + item.getItemName() + ".\n";
             if (playerHP == playerMaxHP) {
-            	System.out.println("You are at full HP\nYou just waste 1 " + item.getItemName() + ".");
+            	message = message + "You are at full HP.\nYou just waste 1 " + item.getItemName() + ".";
             }
             else if (getPlayerHP() + ((Consumable) item).getHpValue() > playerMaxHP) {
-                System.out.println("You healed " + (playerMaxHP - playerHP));
+                message = message + "You healed " + (playerMaxHP - playerHP);
             }
             else {
-                System.out.println("You healed " + ((Consumable) item).getHpValue());
+                message = message + "You healed " + ((Consumable) item).getHpValue();
             }
             setPlayerHP(getPlayerHP() + ((Consumable) item).getHpValue());           	
-            System.out.println("Current HP: " + playerHP + "/" + playerMaxHP);
-            System.out.println();
+            message = message + "\nCurrent HP: " + playerHP + "/" + playerMaxHP;
+            return message;
         } else if (!(item instanceof Consumable)) {
-            System.out.println();
-            System.out.println("This is not a consumable item.\n");
+            return "This is not a consumable item.";
         } else {
-            System.out.println();
-            System.out.println("This item was not found in your inventory.\n");
+            return "This item was not found in your inventory.\n";
         }
     }
     
     // Unequip an item, moving them from the equipment array back to the inventory.
     // ET
-    public void unequipItem(String itemID) {
+    public String unequipItem(String itemID) {
     	// search inventory
     	Item item = findEquip(itemID);
     	Equippable equip = (Equippable)item;
     	// if an item is found in the inventory, place it in the equipment array
     	if (equipped.isEmpty()) {
-    		System.out.println("\nThere's nothing on you to remove.\n");
+    		return "There's nothing on you to remove.";
     		
     	} else if(item != null) {
     		removeFromEquips(itemID);
@@ -650,30 +661,29 @@ public class Player implements Serializable{
     				setPlayerHP(getPlayerMaxHP());
     			}
     		}
-    		System.out.println("\nYou've successfully unequipped " + item.getItemName() + ".\n");
+    		return "You've successfully unequipped " + item.getItemName();
     	} else {
-    		System.out.println("\nYou don't have this item on you.\n");
+    		return "You don't have this item on you.";
     	}
     }
     
     // Display a list of items currently equipped.
     // ET
-    public void showEquipped(){
+    public String showEquipped(){
     	if(equipped.isEmpty()) {
-    		System.out.println("\nYou have nothing equipped right now.\n");
+    		return "You have nothing equipped right now.";
     	}
     	else {
     		Collections.sort(equipped);
-    		System.out.println();
-    		System.out.println("Here's what's on you:");
+    		String message = "Here's what's on you:\n";
     		for(Equippable equip : equipped) {
     			if(equip.getHpValue() > 0) {
-    				System.out.println("----------------------------\n" + equip.getItemID() + ": " + equip.getItemName() + " +" + equip.getHpValue() + " HP.");
+    				message = message + equip.getItemID() + ": " + equip.getItemName() + " +" + equip.getHpValue() + " HP.\n";
     			} else {
-    				System.out.println("----------------------------\n" + equip.getItemID() + ": " + equip.getItemName());
+    				message = message + equip.getItemID() + ": " + equip.getItemName() + "\n";
     			}
     		}
-    		System.out.println("----------------------------\n");
+    		return message;
     	}
     }
     
@@ -701,48 +711,45 @@ public class Player implements Serializable{
 
     // Use a consumable item or key
     // Thu
-    public void useItem(String itemID) {
+    public String useItem(String itemID) {
     	if (inventory.isEmpty()) {
-    		System.out.println("\nYou literally have nothing. Pick something up.\n");
-    		return;
+    		return "You literally have nothing. Pick something up.";
     	}
     	Item item = findItem(itemID);
     	if (item == null) {
-    		System.out.println("\nYou don't have this item in your inventory.\n");
-    		return;
+    		return "\nYou don't have this item in your inventory.\n";
     	}
     	if (!(item instanceof Consumable) && item.getItemType().equalsIgnoreCase("Key Item")) {
-    		useKey(item);
+    		return useKey(item);
     	} else
-    		useConsumable(itemID);
+    		return useConsumable(itemID);
     }
     
     //Auto-Pickup items
-    public void autoPickup() {
+    public String autoPickup() {
     	if (currentRoom.getRoomItems().isEmpty())
-    		return;
+    		return "";
 
-    	System.out.println("\nYou automatically picked up: ");
+		String message = "\nYou automatically picked up: \n";
         // Iterate through the items in the room
         for (Item item : currentRoom.getRoomItems()) {
             // Add the item to the player's inventory
         	inventory.add(item);
-        	System.out.println(item.getItemID() + ": " + item.getItemName());
+        	message = message + item.getItemID() + ": " + item.getItemName() +"\n";
         }
         currentRoom.getRoomItems().clear();
+		return message;
     }
-    	
-        
     
     // Use a key to unlock a room
     // Thu
-    public void useKey(Item key) {
+    public String useKey(Item key) {
     	Room nextRoom = gameMap.getRoom(currentRoom.getRoomID()+1);
     	if (nextRoom.getKeyID().equalsIgnoreCase("0"))
-    		System.out.println("There's no room to unlock.");
+    		return "There's no room to unlock.";
     	else {
     		nextRoom.setKeyID("0");
-    		System.out.println("\nYou have successfully unlock the next room!\n");
+    		return "You have successfully unlock the next room!";
     	}
     }
     

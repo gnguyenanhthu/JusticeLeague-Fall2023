@@ -1,27 +1,31 @@
 package com.example.testui.view;
 
-import com.example.testui.model.*;
 import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.*;
 
-import java.io.IOException;
-
 public class GameView extends Pane {
 
+    //Creating a Grid Pane
+    GridPane gridPane = new GridPane();
     private Text display1 = new Text("");
     private TextField commandBox = new TextField();
+
+    private TextField answerBox = new TextField();
 
     public Text getDisplay1() { return display1; }
 
     public TextField getCommandBox() { return commandBox; }
+
+    public TextField getAnswerBox() { return answerBox; }
+
+    public void setDisplay1(Text display1) { this.display1 = display1; }
+
+    public void setCommandBox(TextField commandBox) { this.commandBox = commandBox; }
 
     public GameView() {
     }
@@ -49,7 +53,6 @@ public class GameView extends Pane {
         text1.setFont(Font.font("null", 20));
         text1.setTranslateX(140);
 
-
         //TextField commandBox
         commandBox.setBackground(Background.fill(Color.GAINSBORO));
         commandBox.setMaxWidth(250);
@@ -57,8 +60,11 @@ public class GameView extends Pane {
         commandBox.setPrefHeight(20);
         commandBox.setTranslateX(140);
 
-        //Creating a Grid Pane
-        GridPane gridPane = new GridPane();
+        answerBox.setBackground(Background.fill(Color.GAINSBORO));
+        answerBox.setMaxWidth(250);
+        answerBox.setFont(Font.font("null",15));
+        answerBox.setPrefHeight(20);
+        answerBox.setTranslateX(140);
 
         //Setting size for the pane
         gridPane.setMinSize(900, 700);
@@ -80,6 +86,17 @@ public class GameView extends Pane {
         gridPane.add(commandBox, 0, 3);
         getChildren().add(gridPane);
     }
+
+    public void enterEvent(){
+        gridPane.getChildren().remove(commandBox);
+        gridPane.add(answerBox,0,3);
+    }
+
+    public void exitEvent(){
+        gridPane.getChildren().remove(answerBox);
+        gridPane.add(commandBox,0,3);
+    }
+
 //    public void mainPage() {
 //
 //        Text text1 = new Text("Please enter your name");
