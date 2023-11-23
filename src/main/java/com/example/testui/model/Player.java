@@ -171,7 +171,7 @@ public class Player implements Serializable{
     	else if(!checkRequiredItem()) {
 			setPlayerHP(0);
     		return "You didn't equip the right item, you're dead!"
-					+ "Press Enter to revive at the spawn room or \"exit\" to quit the game.";
+					+ "\nPress Enter to revive at the spawn room or \"exit\" to quit the game.";
     	}
     	else {
     		checkSpawnRoom();
@@ -181,152 +181,134 @@ public class Player implements Serializable{
     
     // Inspect a monster a room
     // Thu
-    public void inspectMonster() {
+    public void inspectMonster(GameView gameView) {
         if (currentRoom.getMonster() != null) {
             Monster monster = currentRoom.getMonster();
-            System.out.println("You inspect the monster in the room:");
-            System.out.println("--------------------------");
-            System.out.println("Monster ID: " + monster.getMonsterID());
-            System.out.println("Monster Name: " + monster.getMonsterName());
-            System.out.println("Monster HP: " + monster.getMonsterHP());
-            System.out.println("Monster Attack: " + monster.getMonsterDmg());
-            System.out.println("--------------------------");
-            System.out.println("What do you want to do with it?");
-            System.out.println("1. Fight it (fight)");
-            System.out.println("2. Leave it alone (ignore)");
-            Scanner input = new Scanner(System.in);
-            String answer = input.nextLine();
-            while(!answer.equalsIgnoreCase("fight") && !answer.equalsIgnoreCase("ignore")){
-                System.out.println("Please type \"fight\" or \"ignore\".");
-                answer = input.nextLine();
-            }
-            if (answer.equalsIgnoreCase("fight")) {
-                fightMonster();
-            }
-            else {
-                System.out.println("\nSCP is still here if you come back!\n");
-            }
+			String message = "You inspect the monster in the room:"
+					+ "\n--------------------------"
+					+ "\n" + monster.getMonsterID() + ": " + monster.getMonsterName()
+					+ "\nHP: " + monster.getMonsterHP()
+					+ "\nAttack: " + monster.getMonsterDmg()
+					+ "\n--------------------------"
+					+ "\nWhat do you want to do with it?\n\n";
+			gameView.enterExMonster(message);
+			gameView.getIgnoreButton().setOnMouseClicked(e -> {
+					gameView.exitExMonster();
+					gameView.updateView("SCP is still here if you come back!"
+							+ "\n---------------\n" + displayLocation());
+			});
+			gameView.getFightButton().setOnMouseClicked(e -> {
+					gameView.exitExMonster();
+					fightMonster(gameView);
+			});
         } else {
-            System.out.println("There's no monster to inspect in this room.");
+            gameView.updateView("There's no monster to inspect in this room.");
         }
     }
 
     // Action when Player fights Monster
     // Thu, Andrew
-    public void fightMonster() {
-        if (currentRoom.getMonster() != null) {
-            Monster monster = currentRoom.getMonster();
-            System.out.println("\nGAME ON");
-            System.out.println("Here are commands you can use: ");
-            System.out.println("- Select weapon (1,2,3) \n- Inventory, equip, unequip, use");
-            if (weapons.isEmpty()) {
-            	System.out.println("You don't have any weapons");
-            } else {
-                System.out.println("\nYour list of weapon:");
-                for (int i=0; i < weapons.size(); i++) {
-                	System.out.println(i+1 + "/ " + weapons.get(i).getItemName() + " (" + weapons.get(i).getAtkValue() + ")");
-                }
-            }
-            System.out.println("Please input your command: ");
-            Scanner input = new Scanner(System.in);
-            String answer = input.nextLine();
-            while (monster.getMonsterHP() > 0 && playerHP > 0){
-                if (answer.equalsIgnoreCase("inventory")) {
-                    showInventory();
-                }
-                else if (answer.toLowerCase().contains("equip") && !answer.toLowerCase().contains("unequip")){
-                    String itemName = answer.substring(6,answer.length()); //split item name
-                    equipItem(itemName);
-                }
-                else if (answer.toLowerCase().contains("unequip")){
-                    String itemName = answer.substring(8,answer.length()); //split item name
-                    unequipItem(itemName);
-                }
-                else if (answer.toLowerCase().contains("use")){
-                    String itemName = answer.substring(4,answer.length()); //split item name
-                    useItem(itemName);
-                }
-                else if (answer.equalsIgnoreCase("1") || answer.equalsIgnoreCase("2") || answer.equalsIgnoreCase("3")){
-                	int playerAttack = 0;
-                	if (answer.equalsIgnoreCase("1") && !weapons.isEmpty())
-                		playerAttack = weapons.get(0).getAtkValue();
-                	else if (answer.equalsIgnoreCase("2") && weapons.size() >= 2)
-                		playerAttack = weapons.get(1).getAtkValue();
-                	else if (answer.equalsIgnoreCase("3") && weapons.size() >= 3)
-                		playerAttack = weapons.get(2).getAtkValue();
-                	else {
-                		System.out.println("You don't have this weapon!");
-                		playerAttack = 0;
-                	}
-                	monster.setMonsterHP(monster.getMonsterHP() - playerAttack);
-                	System.out.println("\n~~~~~~~~~~~~~");
-                    System.out.println("You deal " + playerAttack + " damage to " + monster.getMonsterName());
-                    System.out.println(monster.getMonsterName() + "'s HP: " + monster.getMonsterHP());
-                    System.out.println("~~~~~~~~~~~~~");
-                    if (monster.getMonsterHP() <= 0) {
-                        currentRoom.setMonster(null);
-                        System.out.println("Monster is dead. You won!");
-                        break;
-                    }
-                    int dice = (int) ((Math.random() * (monster.getDamageThreshold()*3 - 1)) + 1);
-                    if (dice < monster.getDamageThreshold()) {
-                        setPlayerHP(playerHP - monster.getMonsterDmg() * 2);
-                        System.out.println("Critical hit!");
-                        System.out.println("Monster deals " + monster.getMonsterDmg()*2 + " damage to you.");
-                    }
-                    else {
-                        setPlayerHP(playerHP - monster.getMonsterDmg());
-                        System.out.println("Monster deals " + monster.getMonsterDmg() + " damage to you.");
-                    }
-                    System.out.println(playerName + "'s HP: " + playerHP);
-                    System.out.println("~~~~~~~~~~~~~\n");
-                    if (playerHP <= 0){
-                        System.out.println("You're dead! GAME OVER!");
-                        System.out.println("Press enter to revive at the spawn room or \"exit\" to quit the game.");
-                		String decision = input.nextLine();	
-                		if (decision.equalsIgnoreCase("exit")) {
-                			return;
-                		}
-                		else {
-                			revivePlayer();
-                		}
-                        break;
-                    }
-                } else {
-                    System.out.println("Please enter correct command.");
-                }
-                if (weapons.isEmpty()) {
-                	System.out.println("You don't have any weapons");
-                } else {
-	                System.out.println("Your list of weapon:");
-	                for (int i=0; i < weapons.size(); i++) {
-	                	System.out.println(i+1 + "/ " + weapons.get(i).getItemName() + " (" + weapons.get(i).getAtkValue() + ")");
-	                }
-                }
-                System.out.println("Please input your command: ");
-                answer = input.nextLine();
-            }       
-        } else {
-            System.out.println("\nThere's no monster to fight in this room.\n");
-        }
-    }
+    public void fightMonster(GameView view) {
+		Monster monster = currentRoom.getMonster();
+		String startFight = "GAME ON";
+		String helpCommand = "\nHere are commands you can use: "
+				+ "\n- Select weapon (1,2,3) \n- Inventory, equip, unequip, use";
+		String listWeapon = "";
+		if (weapons.isEmpty()) {
+			listWeapon += "\nYou don't have any weapons";
+		} else {
+			listWeapon += "\nYour list of weapon:";
+			for (int i = 0; i < weapons.size(); i++) {
+				listWeapon = listWeapon + "\n" + (i + 1) + "/ " + weapons.get(i).getItemName() + " (" + weapons.get(i).getAtkValue() + ")";
+			}
+		}
+		view.updateView(startFight + helpCommand + listWeapon);
+		String finalListWeapon = listWeapon;
+		view.enterFight();
+		view.getFightBox().setOnKeyPressed(e -> {
+			if(e.getCode() == KeyCode.ENTER) {
+				String command = view.getFightBox().getText();
+				view.getFightBox().clear();
+				if (monster.getMonsterHP() > 0 && playerHP > 0) {
+					if (command.equalsIgnoreCase("inventory") || command.equalsIgnoreCase("i")) {
+						view.updateView(showInventory());
+					} else if (command.toLowerCase().contains("equip") && !command.toLowerCase().contains("unequip")) {
+						String itemName = command.substring(6, command.length()); //split item name
+						view.updateView(equipItem(itemName));
+					} else if (command.toLowerCase().contains("unequip")) {
+						String itemName = command.substring(8, command.length()); //split item name
+						view.updateView(unequipItem(itemName));
+					} else if (command.toLowerCase().contains("use")) {
+						String itemName = command.substring(4, command.length()); //split item name
+						view.updateView(useItem(itemName));
+					} else if (command.equalsIgnoreCase("1") || command.equalsIgnoreCase("2") || command.equalsIgnoreCase("3")) {
+						String message = "";
+						int playerAttack = 0;
+						if (command.equalsIgnoreCase("1") && !weapons.isEmpty())
+							playerAttack = weapons.get(0).getAtkValue();
+						else if (command.equalsIgnoreCase("2") && weapons.size() >= 2)
+							playerAttack = weapons.get(1).getAtkValue();
+						else if (command.equalsIgnoreCase("3") && weapons.size() >= 3)
+							playerAttack = weapons.get(2).getAtkValue();
+						else {
+							message += "You don't have this weapon!\n";
+							playerAttack = 0;
+						}
+						monster.setMonsterHP(monster.getMonsterHP() - playerAttack);
+						message = message + "~~~~~~~~~~~~~"
+								+ "\nYou deal " + playerAttack + " damage to " + monster.getMonsterName()
+								+ "\n" + monster.getMonsterName() + "'s HP: " + monster.getMonsterHP()
+								+ "\n~~~~~~~~~~~~~";
+						if (monster.getMonsterHP() <= 0) {
+							currentRoom.setMonster(null);
+							message = message + "\nMonster is dead. You won!";
+							view.exitFight();
+						} else {
+							int dice = (int) ((Math.random() * (monster.getDamageThreshold() * 3 - 1)) + 1);
+							if (dice < monster.getDamageThreshold()) {
+								setPlayerHP(playerHP - monster.getMonsterDmg() * 2);
+								message = message + "\nCritical hit!"
+										+ "\nMonster deals " + monster.getMonsterDmg() * 2 + " damage to you.";
+							} else {
+								setPlayerHP(playerHP - monster.getMonsterDmg());
+								message = message + "\nMonster deals " + monster.getMonsterDmg() + " damage to you.";
+							}
+							message = message + "\n" + playerName + "'s HP: " + playerHP
+									+ "\n~~~~~~~~~~~~~";
+							if (playerHP <= 0) {
+								message = message + "\nYou're dead! GAME OVER!"
+										+"\nPress Enter to revive at the spawn room or \"exit\" to quit the game.";
+								view.exitFight();
+							}
+						}
+						if (monster.getMonsterHP() > 0 && playerHP >0)
+							view.updateView(message + finalListWeapon);
+						else
+							view.updateView(message);
+					} else {
+						view.updateView("Please enter correct command." + helpCommand + finalListWeapon);
+					}
+				}
+			}
+		});
+	}
     
     // Display all weapons in inventory
     // Thu, Andrew
-    public void weaponList() {
+    public String weaponList() {
     	if (weapons.isEmpty()) {
-    		System.out.println("\nYou don't have any weapons in your inventory.\n");
-    		return;
+    		return "You don't have any weapons in your inventory.";
     	}
-	    System.out.println("\nYour list of weapons:");
-	    System.out.println("--------------------------");
+		String message = "Your list of weapons:"
+				+ "\n------------------------------";
 	    Collections.sort(weapons);
 	    for (Weapon weapon : weapons) {
-	            System.out.println("Weapon ID: " + weapon.getItemID());
-	            System.out.println("Weapon Name: " + weapon.getItemName());
-	            System.out.println("Attack Value: " + weapon.getAtkValue());
-	            System.out.println("--------------------------\n");
+	            message = message + "\n" + weapon.getItemID()
+						+ ": " + weapon.getItemName()
+						+ "\nAttack Value: " + weapon.getAtkValue()
+						+ "\n------------------------------";
 	    }
+		return message;
 	}
     
     // Print player's current room information including RoomID, RoomName and RoomDescription
@@ -367,7 +349,7 @@ public class Player implements Serializable{
     public String explore() {
 		String message = "";
     	if (currentRoom.getRoomItems().isEmpty()) {
-    		message += "Nothing but this weird room here.";
+    		message += "Nothing but this weird room here.\n";
     	}
     	else {
     		Collections.sort(currentRoom.getRoomItems());
@@ -448,7 +430,7 @@ public class Player implements Serializable{
 		if (currentRoom.getPuzzle()!= null) {
 			int numAttempts = currentRoom.getPuzzle().getAttempts();
 			view.updateView(currentRoom.getPuzzle().getQuestion());
-			view.enterEvent();
+			view.enterPuzzle();
 			view.getAnswerBox().setOnKeyPressed(e -> {
 				if(e.getCode() == KeyCode.ENTER){
 						String answer = view.getAnswerBox().getText();
@@ -461,7 +443,7 @@ public class Player implements Serializable{
 							String message = currentRoom.getPuzzle().getSolvedMessage() + "\n" + autoPickup();
 							view.updateView(message);
 							currentRoom.setPuzzle(null);
-							view.exitEvent();
+							view.exitPuzzle();
 						}
 						else {
 							currentRoom.getPuzzle().setAttempts(currentRoom.getPuzzle().getAttempts()-1);
@@ -476,16 +458,13 @@ public class Player implements Serializable{
 						if (currentRoom.getPuzzle().getPuzzleDmg()!=0) {
 							this.setPlayerHP(this.getPlayerHP() - currentRoom.getPuzzle().getPuzzleDmg());
 							message += "You took " + currentRoom.getPuzzle().getPuzzleDmg() + " damage.";
-							if (playerHP <= 0)
-								revivePlayer();
 						}
 						view.updateView(message);
-						view.exitEvent();
+						view.exitPuzzle();
 					}
 			});
 		} else {
 			view.updateView("There's no puzzle to solve!");
-			return;
 		}
 	}
 
@@ -501,7 +480,7 @@ public class Player implements Serializable{
     				return item.getItemID() + ": " + item.getItemName() + "\n" + item.getItemDescription();
     		}
     		else {
-    			return "\nYou don't have this item.";
+    			return "You don't have this item.";
     		}
     	}
     }
@@ -543,7 +522,7 @@ public class Player implements Serializable{
     // Thu
     public String combineItem() {
     	if (currentRoom.getRoomID() != 5) {
-    		return "\nYou can only combine items in Room LC-05.\n";
+    		return "You can only combine items in Room LC-05.";
     	}
     	int key0 = 0, key1 = 0, key2 = 0;
     	for (Item item : inventory) {
@@ -559,27 +538,27 @@ public class Player implements Serializable{
     		removeAllKeys("A15");
     		Item combineItem = gameMap.getCombineItem().get(0);
     		inventory.add(combineItem);
-    		return "\nYou have successfully combined 2 " + item.getItemName() + ".\n"
-					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n";
+    		return "You have successfully combined 2 " + item.getItemName() + ".\n"
+					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.";
     	}
     	else if (key1 == 2) {
     		Item item = findItem("A16");
     		removeAllKeys("A16");
     		Item combineItem = gameMap.getCombineItem().get(1);
     		inventory.add(combineItem);
-			return "\nYou have successfully combined 2 " + item.getItemName() + ".\n"
-					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n";
+			return "You have successfully combined 2 " + item.getItemName() + ".\n"
+					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.";
     	}
     	else if (key2 == 2) {
     		Item item = findItem("A17");
     		removeAllKeys("A17");
     		Item combineItem = gameMap.getCombineItem().get(2);
     		inventory.add(combineItem);
-			return "\nYou have successfully combined 2 " + item.getItemName() + ".\n"
-					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.\n";
+			return "You have successfully combined 2 " + item.getItemName() + ".\n"
+					+ combineItem.getItemID() + ": " + combineItem.getItemName() + " is added to your inventory.";
     	}
     	else {
-    		return "\nYou don't have any items to combine.\n";
+    		return "You don't have any items to combine.";
     	}
     }
     
@@ -628,7 +607,7 @@ public class Player implements Serializable{
         } else if (!(item instanceof Consumable)) {
             return "This is not a consumable item.";
         } else {
-            return "This item was not found in your inventory.\n";
+            return "This item was not found in your inventory.";
         }
     }
     
@@ -707,7 +686,7 @@ public class Player implements Serializable{
     	}
     	Item item = findItem(itemID);
     	if (item == null) {
-    		return "\nYou don't have this item in your inventory.\n";
+    		return "You don't have this item in your inventory.";
     	}
     	if (!(item instanceof Consumable) && item.getItemType().equalsIgnoreCase("Key Item")) {
     		return useKey(item);
@@ -725,6 +704,8 @@ public class Player implements Serializable{
         for (Item item : currentRoom.getRoomItems()) {
             // Add the item to the player's inventory
         	inventory.add(item);
+			if (item instanceof Weapon)
+				weapons.add((Weapon) item);
         	message = message + item.getItemID() + ": " + item.getItemName() +"\n";
         }
         currentRoom.getRoomItems().clear();

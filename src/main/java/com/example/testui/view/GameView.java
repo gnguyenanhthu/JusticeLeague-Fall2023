@@ -16,15 +16,25 @@ public class GameView extends Pane {
     private Text display1 = new Text("");
     private TextField commandBox = new TextField();
     private TextField answerBox = new TextField();
+    private TextField fightBox = new TextField();
     private GridPane inventory = new GridPane();
     private Text invColumn1 = new Text("");
     private Text invColumn2 = new Text("");
+
+    private Button fightButton = new Button("Fight");
+    private Button ignoreButton = new Button("Ignore");
 
     public Text getDisplay1() { return display1; }
 
     public TextField getCommandBox() { return commandBox; }
 
     public TextField getAnswerBox() { return answerBox; }
+
+    public TextField getFightBox() { return fightBox; }
+
+    public Button getFightButton() { return fightButton; }
+
+    public Button getIgnoreButton() { return ignoreButton; }
 
     public void setDisplay1(Text display1) { this.display1 = display1; }
 
@@ -72,11 +82,6 @@ public class GameView extends Pane {
         commandBox.setPrefHeight(20);
         commandBox.setTranslateX(140);
 
-        answerBox.setBackground(Background.fill(Color.GAINSBORO));
-        answerBox.setMaxWidth(250);
-        answerBox.setFont(Font.font("null",15));
-        answerBox.setPrefHeight(20);
-        answerBox.setTranslateX(140);
 
         //Setting size for the pane
         gridPane.setMinSize(900, 700);
@@ -99,12 +104,21 @@ public class GameView extends Pane {
         getChildren().add(gridPane);
     }
 
-    public void enterEvent(){
+    public void enterPuzzle(){
+        //Set up answerBox
+        answerBox.setBackground(Background.fill(Color.GAINSBORO));
+        answerBox.setMaxWidth(250);
+        answerBox.setFont(Font.font("null",15));
+        answerBox.setPrefHeight(20);
+        answerBox.setTranslateX(140);
+
+        //Replace commandBox with answerBox
         gridPane.getChildren().remove(commandBox);
         gridPane.add(answerBox,0,3);
     }
 
-    public void exitEvent(){
+    public void exitPuzzle(){
+        //Replace answerBox with commandBox
         gridPane.getChildren().remove(answerBox);
         gridPane.add(commandBox,0,3);
     }
@@ -185,9 +199,12 @@ public class GameView extends Pane {
             display1.setFill(Color.CRIMSON);
         else if (message.contains("inventory") || message.contains("Inventory"))
             display1.setFill(Color.LAWNGREEN);
+        else if (message.contains("weapon") || message.contains("~"))
+            display1.setFill(Color.ORANGE);
         else display1.setFill(Color.WHITE);
     }
 
+    //Show inventory in 2 columns
     public void updateInventory(String message){
         String[] lines = message.split("\r\n|\r|\n");
         String column1 = lines[0];
@@ -204,6 +221,54 @@ public class GameView extends Pane {
             display1.setVisible(false);
             inventory.setVisible(true);
         }
+    }
 
+    public void enterExMonster(String message){
+        //Show monster info
+        updateView(message);
+
+        //Set up fightButton
+        fightButton.setStyle("-fx-font: 20 arial; -fx-base: #ee2211;");
+        fightButton.setTranslateX(-100);
+        fightButton.setTranslateY(100);
+
+        //Set up ignoreButton
+        ignoreButton.setStyle("-fx-font: 20 arial; -fx-base: #115eee;");
+        ignoreButton.setTranslateX(100);
+        ignoreButton.setTranslateY(100);
+
+        //Display 2 buttons
+        stackPane.getChildren().add(fightButton);
+        stackPane.getChildren().add(ignoreButton);
+
+        //Hide commandBox
+        gridPane.getChildren().get(2).setVisible(false);
+        gridPane.getChildren().get(3).setVisible(false);
+
+    }
+    public void exitExMonster(){
+        stackPane.getChildren().remove(fightButton);
+        stackPane.getChildren().remove(ignoreButton);
+        gridPane.getChildren().get(2).setVisible(true);
+        gridPane.getChildren().get(3).setVisible(true);
+    }
+
+    public void enterFight(){
+        //Set up fightBox
+        fightBox.setBackground(Background.fill(Color.GAINSBORO));
+        fightBox.setMaxWidth(250);
+        fightBox.setFont(Font.font("null",15));
+        fightBox.setPrefHeight(20);
+        fightBox.setTranslateX(140);
+
+        //Replace commandBox with answerBox
+        gridPane.getChildren().remove(commandBox);
+        gridPane.add(fightBox,0,3);
+    }
+
+    public void exitFight(){
+        //Replace fightBox with commandBox
+        gridPane.getChildren().remove(fightBox);
+        gridPane.add(commandBox,0,3);
     }
 }

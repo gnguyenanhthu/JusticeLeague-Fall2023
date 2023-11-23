@@ -56,6 +56,10 @@ public class GameController {
                         gameModel.getPlayer().playPuzzle(gameView);
                     } else if (command.equalsIgnoreCase("combine")) {
                         gameView.updateView(gameModel.getPlayer().combineItem());
+                    } else if (command.equalsIgnoreCase("weapon")) {
+                        gameView.updateView(gameModel.getPlayer().weaponList());
+                    } else if (command.equalsIgnoreCase("ex monster")) {
+                        gameModel.getPlayer().inspectMonster(gameView);
                     } else if (command.equalsIgnoreCase("inventory") || command.equalsIgnoreCase("i")) {
                         if (gameModel.getPlayer().getInventory().size() <= 8)
                             gameView.updateView(gameModel.getPlayer().showInventory());
