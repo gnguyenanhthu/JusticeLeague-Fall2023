@@ -66,7 +66,7 @@ There is a low hanging ceiling light that perfectly illuminates an old blocky co
 Brightly lit white room with medical beds half covered by a curtain. On a lab table there are two medkits and an adrenaline shot.~
 16~0~18~0~0~
 
-18~EX-SZ~
+18~EX-EZ~
 The Entrance Zone elevator goes up to the Surface Zone. It seems to require a level 04 clearance keycard.~
 17~0~19~0~0~
 

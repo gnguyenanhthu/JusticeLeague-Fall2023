@@ -12,10 +12,13 @@ public class GameView extends Pane {
 
     //Creating a Grid Pane
     GridPane gridPane = new GridPane();
+    StackPane stackPane = new StackPane();
     private Text display1 = new Text("");
     private TextField commandBox = new TextField();
-
     private TextField answerBox = new TextField();
+    private GridPane inventory = new GridPane();
+    private Text invColumn1 = new Text("");
+    private Text invColumn2 = new Text("");
 
     public Text getDisplay1() { return display1; }
 
@@ -32,20 +35,29 @@ public class GameView extends Pane {
 
     public void testView() {
 
-        //Room description
-        Text text2 = display1;
-        text2.setFill(Color.WHITE);
-        text2.setFont(Font.font("null", 20));
-        text2.setWrappingWidth(450);
+        //Display everything
+        display1.setFill(Color.WHITE);
+        display1.setFont(Font.font("null", 20));
+        display1.setWrappingWidth(450);
 
-        //Pane to display room description
-        StackPane room = new StackPane();
-        room.setMinSize(550,350);
-        room.setMaxSize(550,350);
-        room.getChildren().add(text2);
-        room.setAlignment(Pos.CENTER);
-        room.setPadding(new Insets(50,100,100,100));
-        room.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, null, null)));
+        //Display inventory
+        invColumn1.setFill(Color.LAWNGREEN);
+        invColumn1.setFont(Font.font("null", 20));
+        invColumn2.setFill(Color.LAWNGREEN);
+        invColumn2.setFont(Font.font("null", 20));
+        inventory.setHgap(15);
+        inventory.setPadding(new Insets(20, 20, 20, 20));
+        inventory.add(invColumn1, 0,0);
+        inventory.add(invColumn2,1,0);
+
+        //Pane to display
+        stackPane.setMinSize(550,350);
+        stackPane.setMaxSize(550,350);
+        stackPane.getChildren().add(display1);
+        stackPane.getChildren().add(inventory);
+        inventory.setVisible(false);
+        stackPane.setAlignment(Pos.CENTER);
+        stackPane.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, null, null)));
 
         //Please enter your command
         Text text1 = new Text("Please enter your command");
@@ -81,7 +93,7 @@ public class GameView extends Pane {
 
         //Arranging all the nodes in the grid
         gridPane.add(reflectionTitle(), 0, 0);
-        gridPane.add(room,0,1);
+        gridPane.add(stackPane,0,1);
         gridPane.add(text1, 0, 2);
         gridPane.add(commandBox, 0, 3);
         getChildren().add(gridPane);
@@ -157,7 +169,41 @@ public class GameView extends Pane {
         return t;
     }
 
-    public void updateView(String message){
-            display1.setText(message);
+    public void updateView(String message) {
+        if (!display1.isVisible()){
+            inventory.setVisible(false);
+            display1.setVisible(true);
+        }
+        display1.setText(message);
+        if (message.contains("LC"))
+            display1.setFill(Color.WHITE);
+        else if (message.contains("HC"))
+            display1.setFill(Color.YELLOW);
+        else if (message.contains("EZ"))
+            display1.setFill(Color.CYAN);
+        else if (message.contains("SZ"))
+            display1.setFill(Color.CRIMSON);
+        else if (message.contains("inventory") || message.contains("Inventory"))
+            display1.setFill(Color.LAWNGREEN);
+        else display1.setFill(Color.WHITE);
+    }
+
+    public void updateInventory(String message){
+        String[] lines = message.split("\r\n|\r|\n");
+        String column1 = lines[0];
+        String column2 ="";
+        for (int i = 1; i <= 9 ;i++){
+            column1 = column1 + "\n" + lines[i];
+        }
+        for (int i=10; i<lines.length;i++){
+            column2 = column2 + "\n" + lines[i];
+        }
+        invColumn1.setText(column1);
+        invColumn2.setText(column2);
+        if (display1.isVisible()) {
+            display1.setVisible(false);
+            inventory.setVisible(true);
+        }
+
     }
 }

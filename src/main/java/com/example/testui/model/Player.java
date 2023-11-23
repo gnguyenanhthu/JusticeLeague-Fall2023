@@ -140,11 +140,10 @@ public class Player implements Serializable{
     
     // Revive player to Spawn Room
     // Andrew
-    public void revivePlayer() {
-            System.out.println("You have been revived at the spawn room.");
+    public String revivePlayer() {
             setPlayerHP(100);  // Reset player's HP to the maximum value
             setCurrentRoom(this.spawnRoom);  // Move the player to the spawn room
-            displayLocation();  // Display the information about the spawn room
+			return "You have been revived at the spawn room.\n" + displayLocation();
     }
     
     // Action happens after player enter a room
@@ -167,21 +166,13 @@ public class Player implements Serializable{
             	}
     		}
     		setCurrentRoom(gameMap.getRoom(currentRoom.getRoomID()-1));
-    		return "\nThe next room is locked, you need to use " + key.getItemName() + " to unlock.\n";
+    		return "The next room is locked, you need to use " + key.getItemName() + " to unlock.";
     	}
-//    	else if(!checkRequiredItem()) {
-//    		Scanner input = new Scanner(System.in);
-//			setPlayerHP(0);
-//    		System.out.println("You didn't equip the right item, you're dead!");
-//    		System.out.println("Press enter to revive at the spawn room or \"exit\" to quit the game.");
-//    		String decision = input.nextLine();
-//    		if (decision.equalsIgnoreCase("exit")) {
-//    			return;
-//    		}
-//    		else {
-//    			revivePlayer();
-//    		}
-//    	}
+    	else if(!checkRequiredItem()) {
+			setPlayerHP(0);
+    		return "You didn't equip the right item, you're dead!"
+					+ "Press Enter to revive at the spawn room or \"exit\" to quit the game.";
+    	}
     	else {
     		checkSpawnRoom();
 			return displayLocation() + checkVisited();
@@ -341,7 +332,7 @@ public class Player implements Serializable{
     // Print player's current room information including RoomID, RoomName and RoomDescription
     // Thu
     public String displayLocation(){
-		return "\nYou are at Room (" + currentRoom.getRoomID() + ") "
+		return "You are at Room (" + currentRoom.getRoomID() + ") "
 				+ currentRoom.getRoomName() + "\n" + currentRoom.getRoomDescription();
     }
     
@@ -376,7 +367,7 @@ public class Player implements Serializable{
     public String explore() {
 		String message = "";
     	if (currentRoom.getRoomItems().isEmpty()) {
-    		message += "\nNothing but this weird room here.\n";
+    		message += "Nothing but this weird room here.";
     	}
     	else {
     		Collections.sort(currentRoom.getRoomItems());
@@ -397,15 +388,14 @@ public class Player implements Serializable{
     // ET
     public String showInventory() {
     	if(inventory.isEmpty()) {
-    		return "\nYou have nothing in your inventory right now.\n";
+    		return "You have nothing in your inventory right now.";
     	}
     	else {
     		Collections.sort(inventory);
-			String message = "Your Inventory\n";
+			String message = "Your Inventory:\n";
     		for(Item item : inventory) {
     			message = message + "\n" + item.getItemID() + ": " + item.getItemName();
     		}
-    		message += "\n";
 			return message;
     	}
     }
