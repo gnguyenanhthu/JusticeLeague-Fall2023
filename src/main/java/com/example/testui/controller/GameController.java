@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
 import java.io.File;
+import java.io.IOException;
 
 public class GameController {
     private GameModel gameModel;
@@ -98,12 +99,31 @@ public class GameController {
                             gameView.updateView("You did not specify what to unequip.");
                         }
                     } else if (command.contains("use")) {
-
                         if (command.length() > 4) {
                             String itemId = command.substring(4, command.length());
                             gameView.updateView(gameModel.getPlayer().useItem(itemId));
                         } else {
                             gameView.updateView("You did not specify what to use.");
+                        }
+                    } else if (command.equalsIgnoreCase("save")){
+                        File file = new File("Save1.bin");
+                        try {
+                            gameModel.saveGame(gameModel.getPlayer(),file);
+                            gameView.updateView("You have sucessfully save the game.");
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    else if (command.equalsIgnoreCase("load")){
+                        File file = new File("Save1.bin");
+                        try {
+                            gameModel.setPlayer(gameModel.loadGame(file));
+                            gameModel.getPlayer().setCurrentRoom(gameModel.getPlayer().getCurrentRoom());
+                            gameView.updateView("You have sucessfully load the game." + gameModel.getPlayer().enterRoom(true));
+                        } catch (ClassNotFoundException e1) {
+                            e1.printStackTrace();
+                        } catch (IOException e2) {
+                            e2.printStackTrace();
                         }
                     } else {
                         gameView.updateView("Please input right command.");
