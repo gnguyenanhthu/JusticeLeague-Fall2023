@@ -3,7 +3,6 @@ package com.example.testui.controller;
 import com.example.testui.model.*;
 import com.example.testui.view.*;
 import javax.sound.sampled.*;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
 import java.io.File;
@@ -22,12 +21,40 @@ public class GameController {
         this.gameModel = gameModel;
         this.gameView = gameView;
 //        music(file);
+        gameStart();
         gamePlay();
     }
 
+    public void gameStart(){
+        gameView.mainPage();
+        gameView.getNameBox().setOnKeyPressed(e -> {
+            if(e.getCode() == KeyCode.ENTER){
+                String name = gameView.getNameBox().getText();
+                gameModel.getPlayer().setPlayerName(name);
+                gameView.loadGame();
+                gameView.testView();
+                gameView.updateView("Hello " + gameModel.getPlayer().getPlayerName() + ", welcome to SCP DANGER!"
+                        + "\n" + gameModel.getPlayer().displayLocation());
+            }
+        });
+
+        gameView.getLoadButton().setOnMouseClicked(e -> {
+            File file = new File("Save1.bin");
+            try {
+                gameModel.setPlayer(gameModel.loadGame(file));
+                gameModel.getPlayer().setCurrentRoom(gameModel.getPlayer().getCurrentRoom());
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+            gameView.loadGame();
+            gameView.testView();
+            gameView.updateView("You have successfully loaded the game.\n" + gameModel.getPlayer().enterRoom(true));
+        });
+    }
+
     private void gamePlay() {
-        gameView.updateView(gameModel.getPlayer().displayLocation());
-        gameView.testView();
         gameView.getCommandBox().setOnKeyPressed(e -> {
             if(e.getCode() == KeyCode.ENTER) {
                 String command = gameView.getCommandBox().getText();
@@ -109,7 +136,7 @@ public class GameController {
                         File file = new File("Save1.bin");
                         try {
                             gameModel.saveGame(gameModel.getPlayer(),file);
-                            gameView.updateView("You have sucessfully save the game.");
+                            gameView.updateView("You have successfully saved the game.");
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -119,7 +146,7 @@ public class GameController {
                         try {
                             gameModel.setPlayer(gameModel.loadGame(file));
                             gameModel.getPlayer().setCurrentRoom(gameModel.getPlayer().getCurrentRoom());
-                            gameView.updateView("You have sucessfully load the game." + gameModel.getPlayer().enterRoom(true));
+                            gameView.updateView("You have successfully loaded the game.\n" + gameModel.getPlayer().enterRoom(true));
                         } catch (ClassNotFoundException e1) {
                             e1.printStackTrace();
                         } catch (IOException e2) {

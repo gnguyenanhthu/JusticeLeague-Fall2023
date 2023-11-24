@@ -9,7 +9,7 @@ public class GameModel {
     private Map myMap = new Map();
 
     public GameModel() {
-        player = new Player("Thu",myMap);
+        player = new Player("Player",myMap);
     }
 
     public Player getPlayer() { return player; }

@@ -63,9 +63,11 @@ public class Player implements Serializable{
 	}
 	
 	public void setPlayerMaxHP(int playerMaxHP) { this.playerMaxHP = playerMaxHP; }
-	
+
+	public void setPlayerName(String playerName) { this.playerName = playerName; }
+
 	public boolean checkKey() {
-		return (currentRoom.getKeyID().equals("0"));
+		return (currentRoom.getKeyID().equalsIgnoreCase("0"));
 	}
 	
 	// Check required item when enter a room
@@ -154,13 +156,13 @@ public class Player implements Serializable{
     	if (!checkKey()) {
     		Item key = null;
     		for(Item item : gameMap.itemList) {
-    			if(item.getItemID().equals(currentRoom.getKeyID())) {
+    			if(item.getItemID().equalsIgnoreCase(currentRoom.getKeyID())) {
     				key = item;
     			}
         	}
     		if (key == null) {
     			for(Item item : gameMap.combineItem) {
-        			if(item.getItemID().equals(currentRoom.getKeyID())) {
+        			if(item.getItemID().equalsIgnoreCase(currentRoom.getKeyID())) {
         				key = item;
         			}
             	}
@@ -175,6 +177,10 @@ public class Player implements Serializable{
     	}
     	else {
     		checkSpawnRoom();
+			if (currentRoom.getRoomID() == 20)
+				return displayLocation() + checkVisited()
+						+ "\n---------------"
+						+ "\nCongratulations! You finished the game! You can hang around or type \"exit\" to quit the game.";
 			return displayLocation() + checkVisited();
     	}
     }
@@ -391,7 +397,7 @@ public class Player implements Serializable{
 			return "You have to solve the puzzle before picking up items.";
 		} else {
 			for (Item item : currentRoom.getRoomItems()) {
-				if (item.getItemID().equals(itemID)) {
+				if (item.getItemID().equalsIgnoreCase(itemID)) {
 					currentRoom.getRoomItems().remove(item);
 					inventory.add(item);
 					if (item instanceof Weapon)
@@ -489,7 +495,7 @@ public class Player implements Serializable{
     // Thu
     public Item findItem(String itemID) {
     	for(Item item : inventory) {
-			if(item.getItemID().equals(itemID)) {
+			if(item.getItemID().equalsIgnoreCase(itemID)) {
 				return item;
 			}
     	}
@@ -500,7 +506,7 @@ public class Player implements Serializable{
     // ET
     public Item findEquip(String itemID) {
     	for(Item item : equipped) {
-			if(item.getItemID().equals(itemID)) {
+			if(item.getItemID().equalsIgnoreCase(itemID)) {
 				return item;
 			}
     	}
@@ -511,7 +517,7 @@ public class Player implements Serializable{
     // Thu
     public void removeAllKeys(String itemID) {
     	for(int i = 0; i < inventory.size(); i++) {
-			if(inventory.get(i).getItemID().equals(itemID)) {
+			if(inventory.get(i).getItemID().equalsIgnoreCase(itemID)) {
 				inventory.remove(i);
 				--i;
 			}

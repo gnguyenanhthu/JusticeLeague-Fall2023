@@ -76,7 +76,7 @@ After the elevator, there seems to be a dark whirling hole on the wall. It stran
 
 20~SZ-02~
 The main entrance is strangely fortified to disallow personnel or SCPs to leave. More so, there seems to be a gateway flashing a red light similar to a metal detector but not for metal detection. You hear someone or something quietly crying.~
-0~19~0~21~0~
+0~0~0~19~0~
 
 21~SZ-03~
 A room that used to resemble an office cubicle is destroyed with [REDACTED] personnels and only a tall white skinny humanoid crying against the wall. Your instincts wants you to avoid this creature at all costs.~

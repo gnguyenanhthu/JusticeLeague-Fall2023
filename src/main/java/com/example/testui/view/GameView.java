@@ -1,19 +1,33 @@
 package com.example.testui.view;
 
 import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
+import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
+
+import java.awt.*;
+import java.util.Stack;
 
 public class GameView extends Pane {
 
     //Creating a Grid Pane
-    GridPane gridPane = new GridPane();
-    StackPane stackPane = new StackPane();
+    private GridPane gridPane = new GridPane();
+    private StackPane stackPane = new StackPane();
+    private StackPane mainPane = new StackPane();
     private Text display1 = new Text("");
+
+    private TextField nameBox = new TextField();
     private TextField commandBox = new TextField();
     private TextField answerBox = new TextField();
     private TextField fightBox = new TextField();
@@ -21,10 +35,14 @@ public class GameView extends Pane {
     private Text invColumn1 = new Text("");
     private Text invColumn2 = new Text("");
 
+    private Button startButton = new Button("New Game");
+    private Button loadButton = new Button("Load Game");
     private Button fightButton = new Button("Fight");
     private Button ignoreButton = new Button("Ignore");
 
     public Text getDisplay1() { return display1; }
+
+    public TextField getNameBox() { return nameBox; }
 
     public TextField getCommandBox() { return commandBox; }
 
@@ -36,6 +54,8 @@ public class GameView extends Pane {
 
     public Button getIgnoreButton() { return ignoreButton; }
 
+    public Button getLoadButton() { return loadButton; }
+
     public void setDisplay1(Text display1) { this.display1 = display1; }
 
     public void setCommandBox(TextField commandBox) { this.commandBox = commandBox; }
@@ -43,8 +63,75 @@ public class GameView extends Pane {
     public GameView() {
     }
 
-    public void testView() {
+    public void mainPage() {
+        BackgroundImage backgroundImage = new BackgroundImage(new Image("file:images/Logo.png", 789, 762, false, true),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        mainPane.setBackground(new Background(backgroundImage));
 
+        Rotate rotate = new Rotate();
+
+        //setting properties for the rotate object.
+        rotate.setAngle(18);
+        rotate.setPivotX(90);
+        rotate.setPivotY(100);
+
+        //Set up startButton
+        startButton.setStyle("-fx-font: 20 arial; -fx-base: #000000;");
+        startButton.setTranslateX(-50);
+        startButton.setTranslateY(80);
+        startButton.getTransforms().add(rotate);
+
+        //Set up loadButton
+        loadButton.setStyle("-fx-font: 20 arial; -fx-base: #000000;");
+        loadButton.setTranslateX(100);
+        loadButton.setTranslateY(128);
+        loadButton.getTransforms().add(rotate);
+
+        //Display 2 buttons
+        mainPane.getChildren().add(startButton);
+        mainPane.getChildren().add(loadButton);
+        mainPane.setMinSize(900,700);
+        getChildren().add(mainPane);
+
+        startButton.setOnMouseClicked(e -> {
+            newGame();
+        });
+
+        loadButton.setOnMouseClicked(e -> {
+            loadGame();
+        });
+    }
+
+    public void newGame(){
+        mainPane.getChildren().remove(startButton);
+        mainPane.getChildren().remove(loadButton);
+        StackPane subPane = new StackPane();
+        subPane.setBackground(Background.fill(Color.DODGERBLUE));
+        subPane.setMinSize(280,70);
+        subPane.setMaxSize(280,70);
+
+        Text text1 = new Text("Please enter your name");
+        text1.setFill(Color.WHITE);
+        text1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+
+        //Creating Text Filed for Name
+        nameBox.setBackground(Background.fill(Color.WHITE));
+        nameBox.setMaxWidth(280);
+        nameBox.setFont(Font.font("null",20));
+        nameBox.setPrefHeight(20);
+        nameBox.setTranslateY(55);
+        nameBox.setAlignment(Pos.CENTER);
+
+        subPane.setTranslateY(-100);
+        subPane.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, null, null)));
+        subPane.getChildren().addAll(text1,nameBox);
+        mainPane.getChildren().add(subPane);
+    }
+
+    public void loadGame(){ getChildren().remove(mainPane);
+        getChildren().add(gridPane);}
+
+    public void testView() {
         //Display everything
         display1.setFill(Color.WHITE);
         display1.setFont(Font.font("null", 20));
@@ -101,7 +188,6 @@ public class GameView extends Pane {
         gridPane.add(stackPane,0,1);
         gridPane.add(text1, 0, 2);
         gridPane.add(commandBox, 0, 3);
-        getChildren().add(gridPane);
     }
 
     public void enterPuzzle(){
@@ -122,50 +208,6 @@ public class GameView extends Pane {
         gridPane.getChildren().remove(answerBox);
         gridPane.add(commandBox,0,3);
     }
-
-//    public void mainPage() {
-//
-//        Text text1 = new Text("Please enter your name");
-//        text1.setFill(Color.WHITE);
-//        text1.setFont(Font.font("null", 20));
-//
-//        Text text2 = display1;
-//        text2.setFill(Color.WHITE);
-//        text2.setFont(Font.font("null", 20));
-//
-//        //Creating Text Filed for Name
-//        TextField textField1 = new TextField();
-//        textField1.setBackground(Background.fill(Color.GAINSBORO));
-//        textField1.setFont(Font.font("null",15));
-//        textField1.setPrefHeight(20);
-//
-//        //Creating Buttons
-//        Button button1 = new Button("Enter");
-//
-//        //Creating a Grid Pane
-//        GridPane gridPane = new GridPane();
-//
-//        //Setting size for the pane
-//        gridPane.setMaxSize(800, 600);
-//
-//        //Setting the padding
-//        gridPane.setPadding(new Insets(10, 10, 10, 10));
-//
-//        //Setting the vertical and horizontal gaps between the columns
-//        gridPane.setVgap(10);
-//        gridPane.setHgap(10);
-//
-//        //Setting the Grid alignment
-//        gridPane.setAlignment(Pos.CENTER);
-//
-//        //Arranging all the nodes in the grid
-//        gridPane.add(reflectionTitle(), 1, 0);
-//        gridPane.add(text1, 1, 1);
-//        gridPane.add(textField1, 1, 2);
-//        gridPane.add(button1, 2, 2);
-//        gridPane.add(text2,1,5);
-//        getChildren().add(gridPane);
-//    }
 
     public Node reflectionTitle() {
         Text t = new Text("SCP DANGER");
