@@ -38,7 +38,7 @@ public class GameController {
             }
         });
 
-        gameView.getLoadButton().setOnMouseClicked(e -> {
+        gameView.getLoadButton().setOnAction(e -> {
             File file = new File("Save1.bin");
             try {
                 gameModel.setPlayer(gameModel.loadGame(file));
@@ -88,7 +88,12 @@ public class GameController {
                         gameView.updateView(gameModel.getPlayer().weaponList());
                     } else if (command.equalsIgnoreCase("ex monster")) {
                         gameModel.getPlayer().inspectMonster(gameView);
-                    } else if (command.equalsIgnoreCase("inventory") || command.equalsIgnoreCase("i")) {
+                    } else if (command.equalsIgnoreCase("gallery")) {
+                        gameView.viewGallery();
+                    } else if (command.equalsIgnoreCase("help")) {
+                        gameView.viewHelp();
+                    }
+                    else if (command.equalsIgnoreCase("inventory") || command.equalsIgnoreCase("i")) {
                         if (gameModel.getPlayer().getInventory().size() <= 8)
                             gameView.updateView(gameModel.getPlayer().showInventory());
                         else

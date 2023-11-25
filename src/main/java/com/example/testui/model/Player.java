@@ -198,12 +198,12 @@ public class Player implements Serializable{
 					+ "\n--------------------------"
 					+ "\nWhat do you want to do with it?\n\n";
 			gameView.enterExMonster(message);
-			gameView.getIgnoreButton().setOnMouseClicked(e -> {
+			gameView.getIgnoreButton().setOnAction(e -> {
 					gameView.exitExMonster();
 					gameView.updateView("SCP is still here if you come back!"
 							+ "\n---------------\n" + displayLocation());
 			});
-			gameView.getFightButton().setOnMouseClicked(e -> {
+			gameView.getFightButton().setOnAction(e -> {
 					gameView.exitExMonster();
 					fightMonster(gameView);
 			});
@@ -443,7 +443,7 @@ public class Player implements Serializable{
 						view.getAnswerBox().clear();
 						view.getCommandBox().clear();
 						if (answer.equalsIgnoreCase("hint")) {
-							view.updateView("Hint:" + currentRoom.getPuzzle().getHint());
+							view.updateView("Hint: " + currentRoom.getPuzzle().getHint());
 						}
 						else if (answer.equalsIgnoreCase(currentRoom.getPuzzle().getAnswer())) {
 							String message = currentRoom.getPuzzle().getSolvedMessage() + "\n" + autoPickup();
@@ -577,7 +577,9 @@ public class Player implements Serializable{
     	// if an item is found in the inventory, place it in the equipment array
     	if (inventory.isEmpty()) {
     		return "You literally have nothing. Pick something up.";
-    	} else if(item != null && item instanceof Equippable) {
+    	} else if(item != null) {
+			if( !(item instanceof Equippable) )
+				return "This is not an equippable item.";
     		Equippable equip = (Equippable)item;
     		removeFromInventory(itemID);
     		equipped.add((Equippable) item);
@@ -585,8 +587,6 @@ public class Player implements Serializable{
     			setPlayerMaxHP(getPlayerMaxHP() + equip.getHpValue());
     		}
     		return "You've successfully equipped " + item.getItemName();
-    	} else if( !(item instanceof Equippable) ) {
-    		return "This is not an equippable item.";
     	} else {
     		return "This item was not found in your inventory.";
     	}
@@ -594,28 +594,26 @@ public class Player implements Serializable{
     // Use a consumable item
     // Augustine, Thu
     public String useConsumable (String itemID) {
-        Item item = findItem(itemID);
-        if (item != null && item instanceof Consumable) {
-            removeFromInventory(itemID);
+		Item item = findItem(itemID);
+		if (item != null && item instanceof Consumable) {
+			if (!(item instanceof Consumable))
+				return "This is not a consumable item.";
+			removeFromInventory(itemID);
 			String message = "You've successfully use " + item.getItemName() + ".\n";
-            if (playerHP == playerMaxHP) {
-            	message = message + "You are at full HP.\nYou just waste 1 " + item.getItemName() + ".";
-            }
-            else if (getPlayerHP() + ((Consumable) item).getHpValue() > playerMaxHP) {
-                message = message + "You healed " + (playerMaxHP - playerHP);
-            }
-            else {
-                message = message + "You healed " + ((Consumable) item).getHpValue();
-            }
-            setPlayerHP(getPlayerHP() + ((Consumable) item).getHpValue());           	
-            message = message + "\nCurrent HP: " + playerHP + "/" + playerMaxHP;
-            return message;
-        } else if (!(item instanceof Consumable)) {
-            return "This is not a consumable item.";
-        } else {
-            return "This item was not found in your inventory.";
-        }
-    }
+			if (playerHP == playerMaxHP) {
+				message = message + "You are at full HP.\nYou just waste 1 " + item.getItemName() + ".";
+			} else if (getPlayerHP() + ((Consumable) item).getHpValue() > playerMaxHP) {
+				message = message + "You healed " + (playerMaxHP - playerHP);
+			} else {
+				message = message + "You healed " + ((Consumable) item).getHpValue();
+			}
+			setPlayerHP(getPlayerHP() + ((Consumable) item).getHpValue());
+			message = message + "\nCurrent HP: " + playerHP + "/" + playerMaxHP;
+			return message;
+		} else {
+			return "This item was not found in your inventory.";
+		}
+	}
     
     // Unequip an item, moving them from the equipment array back to the inventory.
     // ET
